@@ -11,7 +11,7 @@ Following utilities needs to be preinstalled on OCI instance
  2. python packages namely oci, json, time, psutil, datetime and os
  3. Linux commands lsblk, jq, crontab 
  4. make sure crontab service is enabled. Refer [Crontab Reboot](https://phoenixnap.com/kb/crontab-reboot)
- 5. root access to nodes.
+ 
  
 ## Steps
  1. Create dynamic group(say named DG_X) for nodes for which you want to capture disk usage, similar to one below
