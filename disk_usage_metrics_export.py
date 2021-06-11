@@ -1,10 +1,17 @@
+import datetime
 import json
 import os
+import sys
 import time
-
+from datetime import datetime
+import pprint
 import psutil
 
 import oci
+import debugpy
+
+debugpy.listen(5678)
+debugpy.wait_for_client
 
 node_metadata_json = json.loads(os.popen(
     'curl -sH \'Authorization: Bearer Oracle\' http://169.254.169.254/opc/v2/instance | jq -c .').readline().strip())
@@ -67,6 +74,8 @@ def calculate_diskwise_usage():
     disk_to_free_space_percentage = {}
     for disk in disk_to_list_of_mount_pts_map.keys():
         list_of_mount_points = disk_to_list_of_mount_pts_map[disk]
+        print(disk)
+        print(list_of_mount_points)
         total_space = 0
         total_free_space = 0
         for mount_point in list_of_mount_points:
@@ -75,7 +84,7 @@ def calculate_diskwise_usage():
             total_free_space = total_free_space + mount_point_usage.free
 
         percentage_free_space = total_free_space * 100 / total_space
-        metric_value_timestamp_pair = (percentage_free_space, int(time.time() * 1000.0))
+        metric_value_timestamp_pair = (percentage_free_space, datetime.now())
 
         disk_to_free_space_percentage[disk] = metric_value_timestamp_pair
 
@@ -84,37 +93,26 @@ def calculate_diskwise_usage():
 
 
 def post_metric_to_oci(diskname, free_space_pct, timestamp):
-    try:
-        signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
-        service_endpoint = 'https://telemetry-ingestion.' + node_metadata_json['region'] + '.oraclecloud.com'
-        monitoring_client = oci.monitoring.MonitoringClient(signer=signer, service_endpoint=service_endpoint)
-        monitoring_client.s
+    signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
+    service_endpoint = 'https://telemetry-ingestion.' + node_metadata_json['region'] + '.oraclecloud.com'
+    monitoring_client = oci.monitoring.MonitoringClient(config={},
+                                                        signer=signer, service_endpoint=service_endpoint)
 
-        post_metric_data_response = monitoring_client.post_metric_data(
-            post_metric_data_details=oci.monitoring.models.PostMetricDataDetails(
-                metric_data=[
-                    oci.monitoring.models.MetricDataDetails(
-                        namespace="oci_compute_disk",
-                        compartment_id=node_metadata_json['compartmentId'],
-                        name="disk_free_percentage",
-                        dimensions={
-                            'instance_id': node_metadata_json['id'], 'region': node_metadata_json['region'],
-                            'availabilityDomain': node_metadata_json['availabilityDomain'],
-                            'disk_name': diskname
-                        },
-                        datapoints=[
-                            oci.monitoring.models.Datapoint(
-                                timestamp=timestamp,
-                                value=free_space_pct,
-                                count=1)],
-                        metadata={
-                            'unit': 'percentage'})],
-                batch_atomicity="NON_ATOMIC"))
+    post_metric_data_details = oci.monitoring.models.PostMetricDataDetails(metric_data=[
+        oci.monitoring.models.MetricDataDetails(namespace="compute_disk",
+                                                compartment_id=node_metadata_json['compartmentId'],
+                                                name="disk_free_percentage",
+                                                dimensions={'resourceId': node_metadata_json['id'],
+                                                            'region': node_metadata_json['region'],
+                                                            'availabilityDomain': node_metadata_json[
+                                                                'availabilityDomain'], 'diskname': diskname},
+                                                datapoints=[oci.monitoring.models.Datapoint(timestamp=timestamp,
+                                                                                            value=free_space_pct,
+                                                                                            count=1)],
+                                                metadata={'unit': 'Percentage'})], batch_atomicity="NON_ATOMIC")
 
-
-    except Exception:
-        print("There was an error while trying to get the Signer")
-        raise SystemExit
+    post_metric_data_response = monitoring_client.post_metric_data(
+        post_metric_data_details=post_metric_data_details)
 
 
 def manager():
@@ -122,8 +120,8 @@ def manager():
         disk_to_free_space_percentage = calculate_diskwise_usage()
 
         for diskname in disk_to_free_space_percentage.keys():
-            #post_metric_to_oci(diskname, disk_to_free_space_percentage[diskname][0],
-            #                   disk_to_free_space_percentage[diskname][1])
+            post_metric_to_oci(diskname, disk_to_free_space_percentage[diskname][0],
+                               disk_to_free_space_percentage[diskname][1])
             time.sleep(5)
 
 
