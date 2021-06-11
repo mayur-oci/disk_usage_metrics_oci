@@ -1,5 +1,6 @@
 
 
+
 # disk_usage_metrics_oci
 This is a simple python script to ingest metric for free space percentage for each of disks/blockvolumes attached to OCI instance running any Linux flavoured Operating System. It exports metric(free space percentage) to the same region and compartment as nodes where it is deployed.
 
@@ -34,6 +35,7 @@ You can change metric namespace and name [here](https://github.com/mayur-oci/dis
  1. Wont work if a partition belongs multiple block volumes, can be done with LVM.
  2. Currently refreshing disk_to_list_of_mount_pts_map is not timer thread based.
  3. Not tested for crontab scheduling after reboots and crashes of the node.
+ 4. Disk/Blockvolume names are not their displaynames but the names as per lsblk command, which are visible at OS-level.
 
  ## Recommended
  1. Use crontab to schedule the script runs from the file `disk_usage_metrics_export.py` even after reboots as follows.
