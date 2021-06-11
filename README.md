@@ -13,7 +13,7 @@ Following utilities needs to be preinstalled on OCI instance
  1. Create dynamic group(say named DG_X) for nodes for which you want to capture disk usage, similar to one below
  
 ```
-All {instance.compartment.id = 'ocid1.compartment.oc1..XXX'}
+All {instance.compartment.id = 'ocid for the compartment of Nodes'}
 ```
 
  2.  Create policy for above dynamic group to allow it to post metrics in the same compartment, similar to one below
