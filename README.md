@@ -1,4 +1,5 @@
 
+
 # disk_usage_metrics_oci
 This is a simple python script to ingest metric for free space percentage for each of disks/blockvolumes attached to OCI instance running any Linux flavoured Operating System. It exports metric(free space percentage) to the same region and compartment as nodes where it is deployed.
 
@@ -13,14 +14,14 @@ Following utilities needs to be preinstalled on OCI instance
  1. Create dynamic group(say named DG_X) for nodes for which you want to capture disk usage, similar to one below
  
 ```
-All {instance.compartment.id = 'ocid for the compartment of Nodes'}
+All {instance.compartment.id = 'ocid1.compartment.oc1..XXX'}
 ```
 
  2.  Create policy for above dynamic group to allow it to post metrics in the same compartment, similar to one below
 ```
 Allow dynamic-group DG_X to use metrics in compartment [Your Compartmentname where Nodes reside]
 ```
-3. Use crontab to schedule the code from the file `disk_usage_metrics_export.py` even after crashes or reboot as follows.
+3. Use crontab to schedule the script runs from the file `disk_usage_metrics_export.py` even after reboots as follows.
 
 ```
 crontab -e
