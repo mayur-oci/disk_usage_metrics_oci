@@ -92,13 +92,14 @@ With `freeform tags`, you can add custom fields to your dimensions of this metri
 
 ## Limitations and Issues
 
- 1. Wont work if a partition belongs multiple block volumes, can be done with LVM.
+ 1. Wont work if a partition belongs multiple block volumes.
  2. Currently refreshing disk_to_list_of_mount_pts_map is not timer thread based.
  3. Not tested for crontab scheduling after reboots and crashes of the node.
  4. Disk/Blockvolume names are not their displaynames as per the OCI-Console but the names as per lsblk command, which is how OS sees them.
 
  ## Recommended
  1. Use crontab to schedule the script runs from the file `disk_usage_metrics_export.py` even after reboots as follows.
+ 2. Please test and verify the script giving right disk-free metric values for correctness, for your own environment. There are many ways in which linux disks can be partitioned for filesystem, script is not tested for all possible scenarios.
 
 ```
 crontab -e
