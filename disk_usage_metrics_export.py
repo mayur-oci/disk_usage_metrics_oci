@@ -2,7 +2,6 @@ import datetime
 import json
 import os
 import time
-from datetime import datetime
 
 import oci
 import psutil
