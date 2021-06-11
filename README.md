@@ -35,10 +35,11 @@ You can change metric namespace and name [here](https://github.com/mayur-oci/dis
  1. Wont work if a partition belongs multiple block volumes, can be done with LVM.
  2. Currently refreshing disk_to_list_of_mount_pts_map is not timer thread based.
  3. Not tested for crontab scheduling after reboots and crashes of the node.
- 4. Disk/Blockvolume names are not their displaynames but the names as per lsblk command, which are visible at OS-level.
+ 4. Disk/Blockvolume names are not their displaynames as per the OCI-Console but the names as per lsblk command, which is how OS sees them.
 
  ## Recommended
  1. Use crontab to schedule the script runs from the file `disk_usage_metrics_export.py` even after reboots as follows.
+ 2. You can create alarms for absence of a metric too...in case script is not running or has failed, this alarm can notify sysadmins to set it up again.
 
 ```
 crontab -e
