@@ -1,17 +1,11 @@
 import datetime
 import json
 import os
-import sys
 import time
 from datetime import datetime
-import pprint
-import psutil
 
 import oci
-import debugpy
-
-debugpy.listen(5678)
-debugpy.wait_for_client
+import psutil
 
 node_metadata_json = json.loads(os.popen(
     'curl -sH \'Authorization: Bearer Oracle\' http://169.254.169.254/opc/v2/instance | jq -c .').readline().strip())
