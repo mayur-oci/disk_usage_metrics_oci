@@ -1,5 +1,6 @@
 
 # disk_usage_metrics_oci
+This is a simple python script to ingest metric for free space percentage for each of disks/blockvolumes attached to OCI instance running any Linux flavoured Operating System. It exports metric(free space percentage) to the same region and compartment as nodes where it is deployed.
 
 ## Prerequisites
 Following utilities needs to be preinstalled on OCI instance
