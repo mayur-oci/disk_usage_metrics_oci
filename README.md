@@ -7,7 +7,7 @@ This is a simple python script to ingest metric for free space percentage for ea
 ## Prerequisites
 Following utilities needs to be preinstalled on OCI instance
  1. Python 3, pip3
- 2. python packages namely oci, json, time, psutil and os
+ 2. python packages namely oci, json, time, psutil, datetime and os
  3. Linux commands lsblk, jq, crontab 
  4. make sure crontab service is enabled. Refer [Crontab Reboot](https://phoenixnap.com/kb/crontab-reboot)
  
