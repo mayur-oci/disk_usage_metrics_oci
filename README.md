@@ -39,11 +39,11 @@ You can change metric namespace and name [here](https://github.com/mayur-oci/dis
 
  ## Recommended
  1. Use crontab to schedule the script runs from the file `disk_usage_metrics_export.py` even after reboots as follows.
- 2. You can create alarms for absence of a metric in OCI too...in case script is not running or has failed, this alarm can notify sysadmins to set it up again.
 
 ```
 crontab -e
 @reboot sleep 30 && python3 /full/path/to/disk_usage_metrics_export.py
 ```
- 
+  2. You can create alarms for absence of a metric in OCI too...in case script is not running or has failed, this alarm can notify sysadmins to set it up again.
+
  
