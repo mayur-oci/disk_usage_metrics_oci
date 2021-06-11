@@ -106,4 +106,5 @@ crontab -e
 ```
   2. You can create alarms for absence of a metric in OCI too...in case script is not running or has failed, this alarm can notify sysadmins to set it up again.
 
- 
+ ## Screenshots
+ ![Custom Metric for Disk Usage in OCI Console](https://github.com/mayur-oci/disk_usage_metrics_oci/blob/main/image.png?raw=true)
