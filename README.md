@@ -21,17 +21,26 @@ All {instance.compartment.id = 'ocid1.compartment.oc1..XXX'}
 ```
 Allow dynamic-group DG_X to use metrics in compartment [Your Compartmentname where Nodes reside]
 ```
-3. Use crontab to schedule the script runs from the file `disk_usage_metrics_export.py` even after reboots as follows.
+3. Run the script  `disk_usage_metrics_export.py`  as follows.
+```
+nohup python3 /full/path/to/disk_usage_metrics_export.py&
+```
+
+## Configuration
+You can change metric namespace and name [here](https://github.com/mayur-oci/disk_usage_metrics_oci/blob/main/disk_usage_metrics_export.py#L96)
+
+## Limitations and Issues
+
+ 1. Wont work if a partition belongs multiple block volumes, can be done with LVM.
+ 2. Currently refreshing disk_to_list_of_mount_pts_map is not timer thread based.
+ 3. Not tested for crontab scheduling after reboots and crashes of the node.
+
+ ## Recommended
+ 1. Use crontab to schedule the script runs from the file `disk_usage_metrics_export.py` even after reboots as follows.
 
 ```
 crontab -e
 @reboot sleep 30 && python3 /full/path/to/disk_usage_metrics_export.py
 ```
-
-
-
-
-
- 
  
  
