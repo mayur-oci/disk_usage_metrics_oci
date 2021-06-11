@@ -1,6 +1,7 @@
 
 
 
+
 # disk_usage_metrics_oci
 This is a simple python script to ingest metric for free space percentage for each of disks/blockvolumes attached to OCI instance running any Linux flavoured Operating System. It exports metric(free space percentage) to the same region and compartment as nodes where it is deployed.
 
@@ -28,7 +29,66 @@ nohup python3 /full/path/to/disk_usage_metrics_export.py&
 ```
 
 ## Configuration
-You can change metric namespace and name [here](https://github.com/mayur-oci/disk_usage_metrics_oci/blob/main/disk_usage_metrics_export.py#L96)
+
+ 1. You can change metric namespace and name
+    [here](https://github.com/mayur-oci/disk_usage_metrics_oci/blob/main/disk_usage_metrics_export.py#L96),
+    you can also update dimensions.
+2. You can use node metadata service to capture almost any field related to OCI node as follows(fyi script already uses it).
+```Shell
+ubuntu@ubuntu:/$ curl -sH 'Authorization: Bearer Oracle' http://169.254.169.254/opc/v2/instance
+{
+  "availabilityDomain" : "pqpf:US-SANJOSE-1-AD-1",
+  "faultDomain" : "FAULT-DOMAIN-2",
+  "compartmentId" : "ocid1.compartment.oc1..aaaaaaaa2z4wup7a4enznwxi3mkk55cperdk3fcotagepjnan5utdb3tvakq",
+  "displayName" : "ubuntu",
+  "hostname" : "ubuntu",
+  "id" : "ocid1.instance.oc1.us-sanjose-1.anzwuljruwpiejqcshxer5x7zcsln2bk27vx4r5oy3qbaftkozjxd4ilbdha",
+  "image" : "ocid1.image.oc1.us-sanjose-1.aaaaaaaasgfnf2zpd45xotkww5fqv5xu4fedeypucu7vdc4ph6daxb72bcqa",
+  "metadata" : {
+    "ssh_authorized_keys" : "ssh-rsa XXX ssh-key-2020-11-09"
+  },
+  "region" : "us-sanjose-1",
+  "canonicalRegionName" : "us-sanjose-1",
+  "ociAdName" : "us-sanjose-1-ad-1",
+  "regionInfo" : {
+    "realmKey" : "oc1",
+    "realmDomainComponent" : "oraclecloud.com",
+    "regionKey" : "SJC",
+    "regionIdentifier" : "us-sanjose-1"
+  },
+  "shape" : "VM.Standard.E4.Flex",
+  "shapeConfig" : {
+    "ocpus" : 1.0,
+    "memoryInGBs" : 16.0,
+    "networkingBandwidthInGbps" : 1.0,
+    "maxVnicAttachments" : 2
+  },
+  "state" : "Running",
+  "timeCreated" : 1622582232318,
+  "agentConfig" : {
+    "monitoringDisabled" : false,
+    "managementDisabled" : false,
+    "allPluginsDisabled" : false,
+    "pluginsConfig" : [ {
+      "name" : "Vulnerability Scanning",
+      "desiredState" : "DISABLED"
+    }, {
+      "name" : "Custom Logs Monitoring",
+      "desiredState" : "ENABLED"
+    }, {
+      "name" : "Compute Instance Monitoring",
+      "desiredState" : "ENABLED"
+    }, {
+      "name" : "Bastion",
+      "desiredState" : "DISABLED"
+    } ]
+  },
+  "freeformTags" : {
+    "os_type" : "ubuntu"
+  }
+}
+```
+With `freeform tags`, you can add custom fields to your dimensions of this metric. These are the same tags you have given to node or group of nodes, you are monitoring disk usage of.
 
 ## Limitations and Issues
 
